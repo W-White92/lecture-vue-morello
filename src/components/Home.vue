@@ -35,7 +35,7 @@ export default {
         return {
             loading: false,
             boards: [],
-            // error:''
+            error:''
         }
     },
     created() {
