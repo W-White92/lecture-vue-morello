@@ -4,12 +4,12 @@
         <div>
             Board List:
             <div v-if="loading">Loading...</div>
-            <div v-else>
-                Api result : {{apiRes}}
-            </div>
-
-
-
+                <div v-else>Api result: 
+                    <pre>{{apiRes}}</pre>
+                </div>
+                <div v-if="error">Error:
+                    <pre>{{error}}</pre>
+                </div>
 
             <ul>
                 <li>
@@ -25,34 +25,48 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     data() {
         return {
             loading: false,
-            apiRes: ''
+            apiRes: '',
+            error:''
         }
     },
     created() {
         this.fetchData()
     },
     methods: {
-        fetchData(){
+    fetchData() {
         this.loading = true
+        axios.get('http://localhost:3000/_health')
+            .then(res => {
+                this.apiRes = res.data
+            })
+            .catch(res => {
+                this.error = res.response.data
+            })
+            .finally(_=> {
+                this.loading = false
+            })
 
-        const req = new XMLHttpRequest()
+        // const req = new XMLHttpRequest()
 
-        req.open('GET', 'http://localhost:3000/health')
+        // req.open('GET', 'http://localhost:3000/health')
 
-        req.send()
+        // req.send()
 
-        req.addEventListener('load', () => {
-            this.loading = false
-            this.apiRes = {
-                status : req.status,
-                statusText: req.statusText,
-                response: JSON.parse(req.response)
-            }
-        })
+        // req.addEventListener('load', () => {
+        //     this.loading = false
+        //     this.apiRes = {
+        //         status : req.status,
+        //         statusText: req.statusText,
+        //         response: JSON.parse(req.response)
+        //     }
+        // })
+
         }
     }
 }
